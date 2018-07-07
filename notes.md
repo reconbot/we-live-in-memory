@@ -24,11 +24,56 @@ Web
 
 
 
-Use a time of a total stranger so they will feel that their time was not wasted
-give the reader at least one character they can relate to
-every character should want something (even a glass of water)
-every sentence should reveal character or advance the action
-start as close to the end as possible
-be a sadist, no mater how sweet the character is make awful things happen to them
-Write for an audience of one person
-Give your readers as much information as soon as possible, no suspense, they should be able to finish the story themselves
+- Use a time of a total stranger so they will feel that their time was not wasted
+- Give the reader at least one character they can relate to
+- Every character should want something (even a glass of water)
+- Every sentence should reveal character or advance the action
+- Start as close to the end as possible
+- Be a sadist, no mater how sweet the character is make awful things happen to them
+- Write for an audience of one person
+- Give your readers as much information as soon as possible, no suspense, they should be able to finish the story themselves
+
+
+-----
+
+# science presentation
+
+background
+hypothesis
+data
+results
+conclusion
+future directions
+
+
+---
+
+
+```JSON
+{
+  "data": {
+    "site": {
+      "name": "BUSTLE",
+      "post": {
+        "id": "8031264",
+        "__typename": "ArticlePost",
+        "title": "I Wore 'Dad Shoes' For A Week & They Were SO Much Cooler Than I Thought They’d Be",
+        "path": "/p/i-wore-dad-shoes-for-a-week-they-were-so-much-cooler-than-i-thought-theyd-be-8031264",
+        "publishedAt": 1521160559405,
+        "updatedAt": 1524672008862,
+        "author": {
+          "id": "1910027", "name": "Dale Arden Chong" },
+        "tagConnection": {
+          "nodes": [
+            { "id": "1706155", "name": "homepage" },
+            { "id": "1706162", "name": "fashion" },
+            { "id": "2214803", "name": "Freelancer" }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+---

@@ -1,71 +1,159 @@
-![fit](img/tweet.png)
-
----
-
-![inline](img/tweet-response1.png)
-
----
-
-![inline](img/tweet-response1.png)
-![inline](img/tweet-response2.png)
-
----
-
-![inline](img/tweet-response1.png)
-![inline](img/tweet-response2.png)
-![inline](img/tweet-response3.png)
-
----
-
-![inline](img/tweet-response1.png)
-![inline](img/tweet-response2.png)
-![inline](img/tweet-response3.png)
-![inline](img/tweet-response4.png)
-
-
----
+theme: Courier, 2
+autoscale: true
 
 # We Live in Memory
 
 ---
 
 # I 🤷🏻‍♀️ Francis
-# I 💻 ![](img/bustle.png)
-# I ❤️ MJS
+# I 💻 ![50%](img/bustle.png)
 
 ---
 
-## I 🤷🏻‍♀️ @reconbot
-## I 💻 ![](img/bustle.png)
-## I ❤️ JS
+## @reconbot
 
 ![fit](img/reconbot pixen 2018.png)
 
 ---
 
-# Redis Is our Primary Data Store
+
+> Hey Francis, How did everyone at Bustle make the website so fast?
+--People
 
 ---
 
-# Redis Is our Primary Data Store
+> Oh hey, I know that one. We put everything in redis.
+--Francis
+
+---
+
+## Thank you! 👏
+
+[.footer: Francis...]
+
+---
+
+# Redis is our Primary Data Store
+
+### But that doesn't make it fast
+
+---
+
+# We modeled our GraphQL data in a redis GraphDB
+
+^ the modeling is the real reason we're fast
+
+---
+
+> Hey Francis, isn't that really dangerous?
+-- 50/50 chance you'll say this
+
+---
+
+> No
+-- 100% chance I'll say this
+
+---
+
+> Ok, Thanks
+-- You but you don't mean it yet
+
+---
+
+[.build-lists: true]
+# [fit] Redis Is our Primary Data Store
 
 - 1s fsync of AOF
 - 1 hour snapshot RDB
-
-
----
-# Redis Is our Primary Data Store
-
-- 1s fsync of AOF
-- 1 hour snapshot RDB
-
-Good enough for Bustle
+- Read replica ready to take over really fast
+- The 20 minute boot time really sucks (at 40GB)
+- Good enough for Bustle's read heavy load
 
 ---
 
-# Every query has a known time complexity
+# Theory: Modeling GraphQL in redis makes Bustle Fast
 
 ---
+
+![fit](img/google-search.png)
+
+---
+
+![fit](img/google-search-results.png)
+
+---
+
+![fit](img/post-masthead.png)
+
+---
+![](img/post-json.png)
+
+---
+
+![](img/post-json-objects.png)
+
+---
+
+![fit](img/post-graph.png)
+
+^ what if we had a database that let us save and access data like this?
+
+---
+
+> Oh you mean, like Neo4j right?
+-- 99% of you
+
+---
+
+> Sure, but it's faster and doesn't have any of the same features.
+-- Francis
+
+---
+
+# GraphDB
+
+---
+
+# Nodes
+
+# Edges
+
+---
+
+### Node:1 -> HasAuthor -> Node:2
+
+```js
+const post = await node.find(1)
+const { object } = await edge.find({
+  subject: post,
+  predicate: 'HasAuthor'
+})
+const author = await node.find(object)
+```
+
+---
+# Loading Nodes O(N)
+
+```js
+while (true) {
+  const start = Date.now()
+  await redis.hgetall('node:fields:8031264')
+  console.log(`${Date.now() - start}ms`)
+}
+```
+![right, fit](img/zeros.png)
+
+^ It matters when you decide how to store your data layer, not really when you decide to use your data layer
+
+---
+
+
+
+---
+
+## Every query has a known time complexity
+___
+[.autoscale: true]
 
 - GET Time complexity: O(1)
 - ZRANGE Time complexity: O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements returned.
@@ -76,40 +164,18 @@ Good enough for Bustle
 
 ---
 
-But it's just fast
+> OMG How do you use all that information?
+---
 
-```js
-while (true) {
-  const start = Date.now()
-  await redis.hgetall('node:fields:8031264')
-  console.log(`${Date.now() - start}ms`)
-}
-```
+## Edges Are Slow
 
-```
-0ms
-1ms
-0ms
-0ms
-0ms
-0ms
-0ms
-0ms
-1ms
-0ms
-0ms
 
-```
 
 ---
 
 # Shape of the Data Matters
 
-![inline, fit](img/graph of a post.png)
-
----
-
-![](img/timeline of fetching a post.png)
+![inline, fit](img/timeline of fetching a post.png)
 
 ---
 
@@ -142,6 +208,18 @@ while (true) {
 1ms
 ```
 ---
+
+
+
+
+
+
+
+
+
+----
+
+# ignore all these slides
 
 all timings are done in our staging environment
 
@@ -208,21 +286,12 @@ sup
 ![](img/catherine.jpg)
 
 
-----
-background
-hypothesis
-data
-results
-conclusion
-future directions
-
- -----
+-----
 
 
 User wants a story, they want to know how to pull off dad shoes reaaallly bad
 User clicks
 Lambda -> LAmbda => Redis => object => eDge => OBJECTS -> Edges => objects -> and back
-Flowly skirts are the answer
 
 ---
 
@@ -248,6 +317,14 @@ Hexastore
 
 RDBMS?
 
+----
+Flowly skirts are the answer
+
+----
+
+> When my friends first learned about this experiment, they expressed how "terribly ugly" my shoes were, but I think I might've changed their minds.
+
+- Dale Arden Chong
 
 ----
 This is how it can go right, read my story for how it can go wrong
