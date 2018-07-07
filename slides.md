@@ -142,12 +142,18 @@ autoscale: true
 
 ---
 
+# No slow queries¹
+
+[.footer: ¹Ok it's just very hard]
+
+---
+
 > Ok Francis, but how does it work?
 -- Get to it already
 
 ---
 
-# Nodes, Edges, Indexes
+#[fit] Nodes, Edges, and Indexes
 
 ---
 
@@ -227,12 +233,37 @@ autoscale: true
 ---
 # Edges Weighted Store
 
-- Each edge is stored two different ways
+Each edge is stored two different ways
 
-Key | Member | Score
-:---|---:|---:
-`edge:s:${subjectId}:${predicate}` | `objectId` | `weight`
-`edge:o:${objectID}:${predicate}` | `subjectId` | `weight`
+```
+Key                                | Member    | Score
+"edge:s:${subjectId}:${predicate}" | objectId  | weight
+"edge:o:${objectID}:${predicate}"  | subjectId | weight
+```
+
+---
+
+![](img/weighted-store.png)
+
+---
+
+# Indexes
+
+- `node:id` Sorted set of all node IDs
+- `${type}:id` Sorted set of all node IDs of a type
+- `${type}:${field}` Sorted set of unique values to ids
+
+---
+# Not covered
+
+- Interfaces and Mixin Inheritance
+- Named Edges (unique text values between two nodes)
+- The many different Failures and Bugs in production and how we mitigate them
+- Our ORM and Schemas
+
+---
+
+something to bring us back to dad shoes
 
 ---
 
