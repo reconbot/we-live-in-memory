@@ -12,7 +12,7 @@ autoscale: true
 
 ## @reconbot
 
-![fit](img/reconbot pixen 2018.png)
+![fit](img/reconbot_2018.png)
 
 ---
 
