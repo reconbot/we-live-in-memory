@@ -94,9 +94,22 @@ autoscale: true
 
 ---
 
-![fit](img/post-graph.png)
+![](img/post-graphql-graph.png)
+
+
+---
+
+# GraphDB
 
 ^ what if we had a database that let us save and access data like this?
+
+---
+
+![](img/post-graphql-graph.png)
+
+---
+
+![](img/post-graph.png)
 
 ---
 
@@ -105,18 +118,121 @@ autoscale: true
 
 ---
 
-> Sure, but it's faster and doesn't have any of the same features.
+> Sure, but it's faster and doesn't do any of the same things.
 -- Francis
 
 ---
 
-# GraphDB
+> Trains are not slow they have one speed, people get on & off, the people are slow. Databases aren't slow they have one speed, data goes in and out, the queries are slow.
+-- Ikai (a DBA) while waiting for the subway
 
 ---
 
-# Nodes
+> They're complaining about the database being slow but it's their queries that are slow! They don't know how databases work! Where do they get off accusing the database servers!
 
+---
+
+## Some database are slow, some queries are slow, it's all about tradeoffs
+
+---
+
+# Bustle Traded Query Flexibility for Speed
+
+^ and that's why we replicate from graphDB to BigQuery and elasticsearch
+
+---
+
+> Ok Francis, but how does it work?
+-- Get to it already
+
+---
+
+# Nodes, Edges, Indexes
+
+---
+
+# Nodes (fantasy)
+
+- GUID (int32)
+- Node Type
+- Compressed Protocol Buffer
+- Update Clock
+- Lua Script to prevent update clobbering
+
+---
+
+# Nodes (reality)
+
+- GUID (int32)
+- Node Type
+- `JSON.stringify()` fields
+- Redis Hash
+- `HGETALL`, `HMSET`
+
+---
 # Edges
+
+- Sorted Sets
+
+---
+
+# Sorted Sets
+
+- Unique strings sorted by a score, then by member
+- Think: hash with keys (members) sorted by their numeric values (scores) then by key
+- Very fast read/write operations O(log(N))
+
+---
+
+# Edges Hexastore
+
+- 1 big Sorted Set with each edge in 6 orderings
+- Pick an ordering and use `zrangebylex` to search
+
+```
+      ops:ObjectID:Predicate:SubjectID
+      osp:ObjectID:SubjectID:Predicate
+      pos:Predicate:ObjectID:SubjectID
+      pso:Predicate:SubjectID:ObjectID
+      sop:SubjectID:ObjectID:Predicate
+      spo:SubjectID:Predicate:ObjectID
+```
+
+---
+
+![](img/redis-cli-hexastore.png)
+
+^ [ means get the matches inclusive, this is just SPO
+
+---
+
+# Edges Hexastore
+
+- 6 big Sorted Sets with each edge in 6 orderings
+- 4 bytes === 32bit GUID
+- 4 bytes === sha256(predicate).slice(0, 4)
+- 12 Byte Binary packed key `SSSSPPPPOOOO`
+- still use `zrangebylex` to searching the members
+
+---
+
+# Edges Weighted Store
+
+- Can store a weight on an edge
+- `Site -> HasPublishedPost(today in ms) -> Post`
+- Can only search `SP*` or `OP*`
+- Lots of tiny Sorted Sets
+- Faster because of the smaller "n" in `O(log(n))`
+
+---
+# Edges Weighted Store
+
+- Each edge is stored two different ways
+
+Key | Member | Score
+:---|---:|---:
+`edge:s:${subjectId}:${predicate}` | `objectId` | `weight`
+`edge:o:${objectID}:${predicate}` | `subjectId` | `weight`
 
 ---
 
