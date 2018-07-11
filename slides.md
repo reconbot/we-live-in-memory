@@ -30,6 +30,15 @@ autoscale: true
 
 ---
 
+# API Response Time
+![fit](img/api-speed.png)
+
+---
+
+![fit](img/api-speed.png)
+
+---
+
 # Redis is our Primary Data Store
 
 ### But that doesn't make it fast
