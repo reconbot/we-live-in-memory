@@ -17,7 +17,7 @@ autoscale: true
 
 ---
 
-> Oh hey, I know that one. We put everything in Redis.
+> We put everything in Redis.
 --Francis
 
 ---
@@ -63,7 +63,6 @@ autoscale: true
 - 1s fsync of AOF
 - 1 hour snapshot RDB
 - Read replicas ready to take over really fast
-- The 15 minute boot time really sucks (at 40GB)
 - Good enough for Bustle's read heavy load
 
 ---
@@ -395,6 +394,7 @@ for await (author in authors) {
 - [`SAMMIE`](https://github.com/bustle/sammie#readme) Serverless Application Model Made Infinitely Easier
 - [`shep`](https://github.com/bustle/shep) A framework for building JS Applications with AWS API Gateway and Lambda
 - [`streaming-iterables`](https://github.com/reconbot/streaming-iterables) Replace your streams with async iterators
+- [`redis-loader`](https://github.com/bustle/redis-loader) An ioredis-like object that batches commands via dataloader
 
 ---
 
