@@ -1,11 +1,7 @@
 theme: Courier, 2
 autoscale: true
 
-# We Live in Memory
-
----
-
-# I 🤷🏻‍♀️ Francis
+# I 👋 Francis
 # I 💻 ![50%](img/bustle.png)
 
 ---
@@ -16,20 +12,21 @@ autoscale: true
 
 ---
 
-
 > Hey Francis, How did everyone at Bustle make the website so fast?
 --People
 
 ---
 
-> Oh hey, I know that one. We put everything in redis.
+> Oh hey, I know that one. We put everything in Redis.
 --Francis
 
 ---
 
-## Thank you! 👏
+# We Live in Memory
 
-[.footer: Francis...]
+---
+
+![](img/architecture.png)
 
 ---
 
@@ -39,9 +36,9 @@ autoscale: true
 
 ---
 
-# We modeled our GraphQL data in a redis GraphDB
+> Redis is an **in-memory data structure store**, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries...
+-- Redis.io(ish)
 
-^ the modeling is the real reason we're fast
 
 ---
 
@@ -55,8 +52,8 @@ autoscale: true
 
 ---
 
-> Ok, Thanks
--- You but you don't mean it yet
+> I don't believe you
+-- 100% chance you're thinking this
 
 ---
 
@@ -65,13 +62,19 @@ autoscale: true
 
 - 1s fsync of AOF
 - 1 hour snapshot RDB
-- Read replica ready to take over really fast
-- The 20 minute boot time really sucks (at 40GB)
+- Read replicas ready to take over really fast
+- The 15 minute boot time really sucks (at 40GB)
 - Good enough for Bustle's read heavy load
 
 ---
 
-# Theory: Modeling GraphQL in redis makes Bustle Fast
+# Modeling GraphQL data in a redis GraphDB
+
+### ☝️ is why we're fast
+
+---
+
+![fit](img/nate-mjs.jpg)
 
 ---
 
@@ -94,7 +97,7 @@ autoscale: true
 
 ---
 
-![](img/post-graphql-graph.png)
+![](img/post-graph-graphql.png)
 
 
 ---
@@ -105,7 +108,7 @@ autoscale: true
 
 ---
 
-![](img/post-graphql-graph.png)
+![](img/post-graph-graphql.png)
 
 ---
 
@@ -123,8 +126,11 @@ autoscale: true
 
 ---
 
-> Trains are not slow they have one speed, people get on & off, the people are slow. Databases aren't slow they have one speed, data goes in and out, the queries are slow.
--- Ikai (a DBA) while waiting for the subway
+> Databases like trains aren't slow, the queries like the passengers are slow.
+-- Ikai (a DBA) who I guess never took the subway
+
+^ > Trains are not slow they have one speed, people get on & off, the people are slow. Databases aren't slow they have one speed, data goes in and out, the queries are slow.
+
 
 ---
 
@@ -157,29 +163,65 @@ autoscale: true
 
 ---
 
-# Nodes (fantasy)
+# Nodes (future)
 
 - GUID (int32)
 - Node Type
-- Compressed Protocol Buffer
-- Update Clock
-- Lua Script to prevent update clobbering
+- `data` as a Compressed Protocol Buffer
+- Redis Hash
+`{ id, data, updateclock, ...metadata }`
+- Update count with a Lua Script to prevent update clobbering
 
 ---
 
-# Nodes (reality)
+# Nodes (now)
 
 - GUID (int32)
 - Node Type
 - `JSON.stringify()` fields
 - Redis Hash
+`{ id, ...data, ...metadata }`
 - `HGETALL`, `HMSET`
+
+
+---
+
+# Node JSON
+
+```js
+{
+  id: 1,
+  _nodeType: 'User',
+  name: 'Ein',
+  bigDeal: true,
+  createdAt: 1531334120311,
+  updatedAt: 1531334113447
+}
+
+```
+
 
 ---
 # Edges
+[.build-lists: true]
 
-- Sorted Sets
+- An edge is `Subject` -> `Predicate` -> `Object`
+- An edge is `User` -> `UserHasPost` -> `Post`
+- An edge can have weights
+`User` -> `UserHasPost(42)` -> `Post`
 
+---
+
+# Edge JSON
+
+```js
+{
+  subject: 5001,
+  predicate: 'UserHasPost',
+  object: 40238,
+  weight: 42
+}
+```
 ---
 
 # Sorted Sets
@@ -187,6 +229,7 @@ autoscale: true
 - Unique strings sorted by a score, then by member
 - Think: hash with keys (members) sorted by their numeric values (scores) then by key
 - Very fast read/write operations O(log(N))
+- Can search by member or score
 
 ---
 
@@ -196,12 +239,12 @@ autoscale: true
 - Pick an ordering and use `zrangebylex` to search
 
 ```
-      ops:ObjectID:Predicate:SubjectID
-      osp:ObjectID:SubjectID:Predicate
-      pos:Predicate:ObjectID:SubjectID
-      pso:Predicate:SubjectID:ObjectID
-      sop:SubjectID:ObjectID:Predicate
-      spo:SubjectID:Predicate:ObjectID
+      ops:ObjectID:Predicate:SubjectID => 0
+      osp:ObjectID:SubjectID:Predicate => 0
+      pos:Predicate:ObjectID:SubjectID => 0
+      pso:Predicate:SubjectID:ObjectID => 0
+      sop:SubjectID:ObjectID:Predicate => 0
+      spo:SubjectID:Predicate:ObjectID => 0
 ```
 
 ---
@@ -214,10 +257,11 @@ autoscale: true
 
 # Edges Hexastore
 
-- 6 big Sorted Sets with each edge in 6 orderings
+- 6 big Sorted Sets one for each ordering
 - 4 bytes === 32bit GUID
 - 4 bytes === sha256(predicate).slice(0, 4)
 - 12 Byte Binary packed key `SSSSPPPPOOOO`
+- Binary Packing saved 70% of memory
 - still use `zrangebylex` to searching the members
 
 ---
@@ -225,8 +269,9 @@ autoscale: true
 # Edges Weighted Store
 
 - Can store a weight on an edge
-- `Site -> HasPublishedPost(today in ms) -> Post`
+- `Site -> HasPublishedPost(publishedAt) -> Post`
 - Can only search `SP*` or `OP*`
+- Can search ranges of weights (eg, posts published today)
 - Lots of tiny Sorted Sets
 - Faster because of the smaller "n" in `O(log(n))`
 
@@ -254,37 +299,18 @@ Key                                | Member    | Score
 - `${type}:${field}` Sorted set of unique values to ids
 
 ---
-# Not covered
 
-- Interfaces and Mixin Inheritance
-- Named Edges (unique text values between two nodes)
-- The many different Failures and Bugs in production and how we mitigate them
-- Our ORM and Schemas
+> How fast is it?
+--Me
 
 ---
 
-something to bring us back to dad shoes
-
----
-
-### Node:1 -> HasAuthor -> Node:2
-
-```js
-const post = await node.find(1)
-const { object } = await edge.find({
-  subject: post,
-  predicate: 'HasAuthor'
-})
-const author = await node.find(object)
-```
-
----
-# Loading Nodes O(N)
+# Loading Nodes is fast
 
 ```js
 while (true) {
   const start = Date.now()
-  await redis.hgetall('node:fields:8031264')
+  await graph.Site.find(1000001)
   console.log(`${Date.now() - start}ms`)
 }
 ```
@@ -293,38 +319,7 @@ while (true) {
 ^ It matters when you decide how to store your data layer, not really when you decide to use your data layer
 
 ---
-
-
-
----
-
-## Every query has a known time complexity
-___
-[.autoscale: true]
-
-- GET Time complexity: O(1)
-- ZRANGE Time complexity: O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements returned.
-- HMGET Time complexity: O(N) where N is the number of fields being requested.
-- ZSCORE Time complexity: O(1)
-- HGETALL Time complexity: O(N) where N is the size of the hash.
-- ZRANGEBYLEX Time complexity: O(log(N)+M) with N being the number of elements in the sorted set and M the number of elements being returned. If M is constant (e.g. always asking for the first 10 elements with LIMIT), you can consider it O(log(N)).
-
----
-
-> OMG How do you use all that information?
----
-
-## Edges Are Slow
-
-
-
----
-
-# Shape of the Data Matters
-
-![inline, fit](img/timeline of fetching a post.png)
-
----
+# Loading all the nodes is fast
 
 ```js
 while (true) {
@@ -340,142 +335,76 @@ while (true) {
   console.log(`${Date.now() - start}ms`)
 }
 ```
+![right, fit](img/zeros.png)
 
 ---
-```
-1ms
-1ms
-1ms
-1ms
-1ms
-1ms
-2ms
-1ms
-1ms
-1ms
-```
----
+## Command Batching Makes Redis Fast
 
-
-
-
-
-
-
-
-
-----
-
-# ignore all these slides
-
-all timings are done in our staging environment
-
-r4.2xlarge redis / t2.large nodejs
-64 GB memory / whatever
+![inline, fit](img/post-graph-timeline.png)
 
 ---
+# Not covered: ORM & Schemas
+
 ```js
-const postId = 8031264
-const site = await graph.Site.findBy('name', 'BUSTLE')
-const [ postEdge ] = await graph.edge.find({
-  subject: site,
-  predicate: 'SiteHasPost',
-  object: { id: postId }
+import { edge, Post, User } from './graph'
+const ein = await User.create({ name: 'Ein the Dog', meta: {}})
+const post = await Post.findBy('path', '/p/10-reasons-why-dogs-are-the-best')
+await edge.create({
+  subject: post,
+  predicate: 'HasAuthor'
+  object: ein
 })
-const post = graph.Post.FIND(postEdge.object.id)
-const [[userEdge], tagEdges] = await Promise.all([
-  graph.edge.FIND({ subject: post, predicate: 'PostHasAuthor' }),
-  graph.edge.FIND({ subject: post, predicate: 'PostHasTags' })
-])
-const [user, ...tags ] = await Promise.all([
-  graph.User.FIND(userEdge.object.id),
-  ...tagEdges.map(({ object: { id } }) => graph.Tag.FIND(id))
-])
 
+const authors = edge.makeIterator({ subject: post, predicate: 'HasAuthor'})
+for await (author in authors) {
+  await giveTreat(author)
+}
 ```
 ---
 
-I hate that last slide
+# Not covered:
 
-
----
-
-Ok what's a graph?
-
-What's an edge?
-
-ISn't this a join table?
-
-Ohh it's all in memory
-
-What's the basics of how our graphdb works?
-
-Lets see it in graphql
-
-oh hey this is neat!
-
-See ya!
+- Interfaces and Mixin Inheritance
+- Typed Edge validations
+- Named Edges (unique text values between two nodes)
+- The many different Failures and Bugs in production and how we mitigate them
 
 ---
 
-
-No slow queries
-Round trip time is the killer so batch your requests
-Store your data in a way that matches your access patterns
-
+# In Conclusion
 
 ---
 
-# hi Catherine
+# The secret of Dad shoes is a flowy skirt
 
-sup
+![fit](img/post-flowy-skirt.png)
 
-![](img/catherine.jpg)
+---
+# In Conclusion
 
-
------
-
-
-User wants a story, they want to know how to pull off dad shoes reaaallly bad
-User clicks
-Lambda -> LAmbda => Redis => object => eDge => OBJECTS -> Edges => objects -> and back
+- Don't make slow queries possible
+- Round trip time is a killer so batch your requests
+- Store your data in a way that matches your access patterns
 
 ---
 
-How did that work?
+# Related Open Source
 
-----
+- [`bluestream`](https://github.com/bustle/bluestream) Streams for Async functions
+- [`mobiledoc-kit`](https://github.com/bustle/mobiledoc-kit) A toolkit for building WYSIWYG editors with Mobiledoc
+- [`SAMMIE`](https://github.com/bustle/sammie#readme) Serverless Application Model Made Infinitely Easier
+- [`shep`](https://github.com/bustle/shep) A framework for building JS Applications with AWS API Gateway and Lambda
+- [`streaming-iterables`](https://github.com/reconbot/streaming-iterables) Replace your streams with async iterators
 
-GraphQL shapes the data
+---
 
-----
+#[fit] We Live In Memory
+## (the story)
+#[fit] rbrtr.com/post/1911
 
-GRaphDB pulls it out for you
+---
+# Thanks 👏
 
-----
+![90%, inline](img/bdg.png)
 
-Node Store
-
-----
-
-Hexastore
-
-----
-
-RDBMS?
-
-----
-Flowly skirts are the answer
-
-----
-
-> When my friends first learned about this experiment, they expressed how "terribly ugly" my shoes were, but I think I might've changed their minds.
-
-- Dale Arden Chong
-
-----
-This is how it can go right, read my story for how it can go wrong
-
-----
-
-Come work at bustle
+[.footer: We're hiring!]

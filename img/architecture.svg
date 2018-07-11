@@ -1,0 +1,114 @@
+<svg width="744pt" height="125pt" viewBox="0.00 0.00 744.10 125.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-width: 100%; height: auto;">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 121)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-121 740.1037,-121 740.1037,4 -4,4"></polygon>
+<!-- Users -->
+<g id="node1" class="node">
+<title>Users</title>
+<ellipse fill="none" stroke="#000000" cx="33.0205" cy="-45" rx="33.0411" ry="18"></ellipse>
+<text text-anchor="middle" x="33.0205" y="-40.8" font-family="Times,serif" font-size="14.00" fill="#000000">Users</text>
+</g>
+<!-- Fastly -->
+<g id="node2" class="node">
+<title>Fastly</title>
+<ellipse fill="none" stroke="#000000" cx="136.684" cy="-72" rx="34.7864" ry="18"></ellipse>
+<text text-anchor="middle" x="136.684" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#000000">Fastly</text>
+</g>
+<!-- Users&#45;&gt;Fastly -->
+<g id="edge1" class="edge">
+<title>Users-&gt;Fastly</title>
+<path fill="none" stroke="#000000" d="M63.0043,-52.8095C73.2594,-55.4805 84.9111,-58.5153 95.8733,-61.3705"></path>
+<polygon fill="#000000" stroke="#000000" points="95.1275,-64.793 105.6869,-63.9265 96.8919,-58.019 95.1275,-64.793"></polygon>
+</g>
+<!-- Imgix -->
+<g id="node8" class="node">
+<title>Imgix</title>
+<ellipse fill="none" stroke="#000000" cx="136.684" cy="-18" rx="34.2084" ry="18"></ellipse>
+<text text-anchor="middle" x="136.684" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">Imgix</text>
+</g>
+<!-- Users&#45;&gt;Imgix -->
+<g id="edge8" class="edge">
+<title>Users-&gt;Imgix</title>
+<path fill="none" stroke="#000000" d="M63.0043,-37.1905C73.351,-34.4956 85.1193,-31.4304 96.1668,-28.553"></path>
+<polygon fill="#000000" stroke="#000000" points="97.2533,-31.8869 106.0482,-25.9793 95.4889,-25.1129 97.2533,-31.8869"></polygon>
+</g>
+<!-- API Gateway -->
+<g id="node3" class="node">
+<title>API Gateway</title>
+<ellipse fill="none" stroke="#000000" cx="270.6471" cy="-72" rx="63.1409" ry="18"></ellipse>
+<text text-anchor="middle" x="270.6471" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#000000">API Gateway</text>
+</g>
+<!-- Fastly&#45;&gt;API Gateway -->
+<g id="edge2" class="edge">
+<title>Fastly-&gt;API Gateway</title>
+<path fill="none" stroke="#000000" d="M171.5315,-72C179.4736,-72 188.2055,-72 197.0933,-72"></path>
+<polygon fill="#000000" stroke="#000000" points="197.1604,-75.5001 207.1603,-72 197.1603,-68.5001 197.1604,-75.5001"></polygon>
+</g>
+<!-- Habitat -->
+<g id="node4" class="node">
+<title>Habitat</title>
+<ellipse fill="none" stroke="#000000" cx="409.428" cy="-95" rx="39.4216" ry="18"></ellipse>
+<text text-anchor="middle" x="409.428" y="-90.8" font-family="Times,serif" font-size="14.00" fill="#000000">Habitat</text>
+</g>
+<!-- API Gateway&#45;&gt;Habitat -->
+<g id="edge3" class="edge">
+<title>API Gateway-&gt;Habitat</title>
+<path fill="none" stroke="#000000" d="M325.497,-81.0902C337.5685,-83.0908 350.2546,-85.1933 362.004,-87.1405"></path>
+<polygon fill="#000000" stroke="#000000" points="361.6113,-90.6231 372.049,-88.8052 362.7558,-83.7172 361.6113,-90.6231"></polygon>
+</g>
+<!-- Gradius -->
+<g id="node5" class="node">
+<title>Gradius</title>
+<ellipse fill="none" stroke="#000000" cx="526.4943" cy="-72" rx="41.7114" ry="18"></ellipse>
+<text text-anchor="middle" x="526.4943" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#000000">Gradius</text>
+</g>
+<!-- API Gateway&#45;&gt;Gradius -->
+<g id="edge5" class="edge">
+<title>API Gateway-&gt;Gradius</title>
+<path fill="none" stroke="#000000" d="M333.1539,-69.0987C345.3595,-68.6407 358.0623,-68.2396 369.9672,-68 405.0364,-67.2941 413.8242,-67.0969 448.8888,-68 457.3221,-68.2172 466.2658,-68.5669 474.9674,-68.9715"></path>
+<polygon fill="#000000" stroke="#000000" points="474.8659,-72.4707 485.026,-69.467 475.2104,-65.4792 474.8659,-72.4707"></polygon>
+</g>
+<!-- Habitat&#45;&gt;Gradius -->
+<g id="edge4" class="edge">
+<title>Habitat-&gt;Gradius</title>
+<path fill="none" stroke="#000000" d="M445.8268,-87.8487C456.2072,-85.8093 467.6768,-83.5559 478.6305,-81.4038"></path>
+<polygon fill="#000000" stroke="#000000" points="479.3612,-84.8272 488.4989,-79.465 478.0117,-77.9585 479.3612,-84.8272"></polygon>
+</g>
+<!-- Redis -->
+<g id="node6" class="node">
+<title>Redis</title>
+<ellipse fill="none" stroke="#000000" cx="670.1018" cy="-99" rx="33.0624" ry="18"></ellipse>
+<text text-anchor="middle" x="670.1018" y="-94.8" font-family="Times,serif" font-size="14.00" fill="#000000">Redis</text>
+</g>
+<!-- Gradius&#45;&gt;Redis -->
+<g id="edge6" class="edge">
+<title>Gradius-&gt;Redis</title>
+<path fill="none" stroke="#000000" d="M564.9785,-79.2355C584.647,-82.9334 608.6012,-87.4371 628.6731,-91.2109"></path>
+<polygon fill="#000000" stroke="#000000" points="628.2977,-94.7016 638.7723,-93.1097 629.5912,-87.8221 628.2977,-94.7016"></polygon>
+</g>
+<!-- Elastic Search -->
+<g id="node7" class="node">
+<title>Elastic Search</title>
+<ellipse fill="none" stroke="#000000" cx="670.1018" cy="-45" rx="66.0038" ry="18"></ellipse>
+<text text-anchor="middle" x="670.1018" y="-40.8" font-family="Times,serif" font-size="14.00" fill="#000000">Elastic Search</text>
+</g>
+<!-- Gradius&#45;&gt;Elastic Search -->
+<g id="edge7" class="edge">
+<title>Gradius-&gt;Elastic Search</title>
+<path fill="none" stroke="#000000" d="M564.9785,-64.7645C577.4805,-62.414 591.714,-59.7379 605.5815,-57.1306"></path>
+<polygon fill="#000000" stroke="#000000" points="606.4033,-60.5375 615.5844,-55.25 605.1099,-53.658 606.4033,-60.5375"></polygon>
+</g>
+<!-- S3 -->
+<g id="node9" class="node">
+<title>S3</title>
+<ellipse fill="none" stroke="#000000" cx="270.6471" cy="-18" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="270.6471" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">S3</text>
+</g>
+<!-- Imgix&#45;&gt;S3 -->
+<g id="edge9" class="edge">
+<title>Imgix-&gt;S3</title>
+<path fill="none" stroke="#000000" d="M170.8352,-18C189.891,-18 213.6567,-18 233.2171,-18"></path>
+<polygon fill="#000000" stroke="#000000" points="233.3042,-21.5001 243.3042,-18 233.3041,-14.5001 233.3042,-21.5001"></polygon>
+</g>
+</g>
+</svg>
