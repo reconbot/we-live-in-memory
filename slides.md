@@ -408,7 +408,7 @@ for await (author in authors) {
 ---
 
 #[fit] We Live In Memory
-## (the story)
+## (a short story)
 #[fit] rbrtr.com/post/1911
 
 ---
