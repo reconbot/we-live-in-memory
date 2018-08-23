@@ -395,7 +395,7 @@ query postByPath {
 
 ![left inline](img/install-nemesis.png)
 
-- Fast Reads
+- Really Fast Reads (0-1ms)
 - Node and Edge Schemas with Types and Interfaces
 - Weighted and Labeled Edges with Scanning
 - Compression
@@ -407,10 +407,10 @@ query postByPath {
 
 # Lets Make a GraphQL Server
 
-1. the tools
-2. the schema
-3. the resolvers
-4. the data
+1. The tools
+2. The schema
+3. The resolvers
+4. The data
 
 ---
 # Tools
@@ -427,6 +427,197 @@ query postByPath {
 ```
 
 ---
+# apollo-server
+
+```js
+const { ApolloServer } = require('apollo-server')
+const { readFileSync } = require('fs')
+const resolvers = require('./resolvers')
+const typeDefs = readFileSync('./lib/types.graphql', 'UTF8')
+
+const server = new ApolloServer({ typeDefs, resolvers })
+
+server.listen().then(({ url }) => {
+  console.log(`🚀 ☄️ Server ready at ${url}`)
+});
+```
+
+---
+# apollo-server-lambda
+
+```js
+const { ApolloServer } = require('apollo-server-lambda')
+const { readFileSync } = require('fs')
+const resolvers = require('./resolvers')
+const typeDefs = readFileSync('./lib/types.graphql', 'UTF8')
+
+const server = new ApolloServer({ typeDefs, resolvers })
+
+exports.handler = server.createHandler() // 🚀 ☄️
+```
+
+---
+# GraphiQL
+
+![fit](img/apollo-graphiql.png)
+
+---
+
+![fit](img/apollo-graphiql.png)
+
+---
+
+![fit](img/graphiql-schema.png)
+
+---
+# The Schema
+
+- Defines what the data looks like
+- Doesn't care how it behaves
+
+---
+
+# The Schema
+
+```
+type Query {
+  site(name: SITE_NAME!): Site!
+}
+
+enum SITE_NAME {
+  BUSTLE
+  ROMPER
+}
+
+type Site {
+  id: Int!
+  name: String!
+  post(path: String!): Post
+}
+```
+
+^ id and name are DATA, post is a lookup
+
+---
+# The Schema
+
+```
+type Post {
+  id: Int!
+  path: String!
+  title: String!
+  body: String!
+  author: User!
+  tags: [Tag!]!
+}
+```
+
+^ id, path, title, body are all data, author and tags are a lookup
+
+---
+# The Schema
+
+```
+type User {
+  id: Int!
+  name: String!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+}
+```
+---
+
+# The Resolvers
+
+- Only needed for lookups
+- Return a full object
+
+^ used to return only the necessary fields, with our db it was not worth it, not even a little
+
+---
+
+# The Resolvers
+
+```js
+module.exports = {
+  Query: {
+    site: (root, { name }) => { /*...*/ }
+  },
+  Site: {
+    post: async (site, { path }) => { /*...*/ }
+  },
+  Post: {
+    author: async post => { /*...*/ },
+    tags: async post => { /*...*/ }
+  }
+}
+```
+
+---
+# The Site Resolver
+
+```js
+{
+  Site: {
+    post: async (site, { path }) => {
+      const edge = await graph.findLabeledEdge({
+        subject: site.id,
+        predicate: 'path',
+        label: path
+      })
+      if (!edge) { return null }
+      const { object: postId } = edge
+      return graph.findNode(postId)
+    }
+  }
+}
+```
+---
+
+# The Post Resolver
+
+```js
+{
+    Post: {
+    author: async ({ id }) => {
+      const [{ object: userId }] = await graph.findEdges({
+        subject: id,
+        predicate: 'PostHasAuthor'
+      })
+      return graph.findNode(userId)
+    },
+    tags: async ({ id }) => {
+      const edges = await graph.findEdges({
+        subject: id,
+        predicate: 'PostHasTags'
+      })
+      return Promise.all(edges.map(({ object }) => graph.findNode(object)))
+    }
+  }
+}
+```
+---
+# The Data
+
+- The ugly code to make test data has been removed
+- its on github
+- It's going to look like any file you ever made to make test data
+
+---
+
+# Lambda Tooling
+- `npm/sammie` - "Serverless Application Model Made Infinitely Easier"
+- Architect - https://arc.codes
+- `npm/shep`
+
+---
+
+#[fit] You're ready to rock and roll 🚀 ☄️
+
+---
 
 ![fit](img/nemesis.jpg)
 
@@ -434,8 +625,9 @@ query postByPath {
 
 ---
 
-# Procrastination is a wonderful motivator
-- 2 libraries, 4 typedefs, a short story, and about 16 open source prs made avoiding working on this talk
-- Oh and nemesis-db
+# Thank you 🙏
 
-# https://github.com/reconbot/we-live-in-memory
+- https://github.com/reconbot/we-live-in-memory
+- https://github.com/bustle/nemesis-db
+- https://bustle.company/
+
