@@ -50,7 +50,7 @@ autoscale: true
 
 ___
 
-# Story Arc
+# The Story
 
 1. What is bustle doing
 2. How is bustle doing it
@@ -69,8 +69,6 @@ ___
 ---
 
 ![125%](img/bustle-buys.png)
-
-^ And we're growing TODO make this a better screenshot
 
 ---
 
@@ -94,18 +92,6 @@ ___
 
 ---
 
-> Ok Francis, but how does it work?
--- Get to it already
-
----
-
-![](img/bdg-stack.png)
-
-
-^ CDN, react λ , graphql λ , Redis/ES
-
----
-
 # What is AWS Lambda (λ)?
 
 ^ Is functions as a service, you get a remote api to call your function, in a consistent environment regardless of concurrency. 1 or 100k requests/s and they're guaranteed to have the same cpu and memory.
@@ -115,6 +101,18 @@ ___
 # Why are we using lambda?
 
 ^ We lowered our monthly spend form 30k a month to 3k a month, and we can now handle unpredictable spikes in traffic that miss our CDN, we've grown 10x without having to worry about it
+
+---
+
+> Ok Francis, but how does it work?
+-- Get to it already
+
+---
+
+![](img/bdg-stack.png)
+
+
+^ CDN, react λ , graphql λ , Redis/ES
 
 ---
 # Layers
@@ -218,6 +216,7 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 -- Redis.io (kinda)
 
 ^ people usually use this as a disposable cache, cache it here and throw it away (eg sessions)
+
 ---
 
 > Hey Francis,
@@ -255,7 +254,7 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 
 ![](img/bdg-stack-linear-labeled.png)
 
-^ describe everything, note that elasticsearch is used for searches and related content
+^ describe everything, note that elasticsearch is "You Know, for Search"
 
 ---
 
@@ -423,7 +422,7 @@ query postByPath {
 1. The tools
 2. The schema
 3. The resolvers
-4. The data
+3. The loaders
 
 ---
 # Tools
@@ -623,6 +622,56 @@ module.exports = {
 ^ we solve this with command batching and redis pipelining
 
 ---
+# Command Batching
+
+`dataloader` - lets you batch and dedupe all queries in a single tick
+
+```js
+const loader = new DataLoader(ids => db.getBunchOfIds(ids))
+await Promise.all([
+  loader.load(1),
+  loader.load(2),
+  loader.load(2),
+  loader.load(3)
+])
+// db.getBunchOfIds([1,2,3])
+```
+
+---
+# Command Batching
+
+`redis-loader` - lets you pipeline all queries in a single tick.
+
+```js
+const posts = await Promise.all([
+  graph.findNode(1),
+  graph.findNode(2),
+  graph.findNode(2),
+  graph.findNode(3)
+])
+
+```
+---
+```
+// redis
+1535039766.77294 [2 127.0.0.1:55031] "hmget" "node:1" "c" "data"
+1535039766.77397 [2 127.0.0.1:55031] "hmget" "node:2" "c" "data"
+1535039766.77554 [2 127.0.0.1:55031] "hmget" "node:2" "c" "data"
+1535039766.77725 [2 127.0.0.1:55031] "hmget" "node:3" "c" "data"
+// 434 µs
+
+// redis-loader
+1535039810.951880 [13 127.0.0.1:55036] "multi"
+1535039810.951898 [13 127.0.0.1:55036] "hmget" "node:1" "c" "data"
+1535039810.951921 [13 127.0.0.1:55036] "hmget" "node:2" "c" "data"
+1535039810.951940 [13 127.0.0.1:55036] "hmget" "node:3" "c" "data"
+1535039810.951956 [13 127.0.0.1:55036] "exec"
+// 76 µs
+```
+
+^ super unscientific test on my latptop
+
+---
 
 # Lambda Tooling
 - `npm/sammie` - "Serverless Application Model Made Infinitely Easier"
@@ -652,6 +701,8 @@ module.exports = {
 ---
 
 # Thank you 🙏
-
-- `https://github.com/reconbot/we-live-in-memory` slides and a short story
-- `https://bustle.company/` a great place to work
+- I'm Francis / reconbot
+- For slides and a short story
+`https://github.com/reconbot/we-live-in-memory`
+- For a great place to work
+`https://bustle.company`
