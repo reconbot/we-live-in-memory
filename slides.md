@@ -27,6 +27,7 @@ autoscale: true
 ---
 
 ![](img/architecture.png)
+^ circle the redis part
 
 ---
 
@@ -36,6 +37,7 @@ autoscale: true
 ---
 
 ![fit](img/api-speed.png)
+
 
 ---
 
@@ -62,7 +64,7 @@ autoscale: true
 ---
 
 > I don't believe you
--- 100% chance you're thinking this
+-- 99% chance you're thinking this
 
 ---
 

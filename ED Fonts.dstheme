@@ -1,0 +1,111 @@
+{
+  "identifier": "6D8C715E-4A74-4BE8-8584-0CA1D4604D3D",
+  "name": "ED Fonts",
+  "customizations": {},
+  "baseTheme": {
+    "variantIdentifier": "scheme1",
+    "identifier": "simple"
+  },
+  "creationDate": 1534875291.2470541,
+  "importDate": 1534875291.2470541,
+  "type": 1,
+  "baseCustomizations": {
+    "headerStrong": {
+      "textScale": 1,
+      "textAlignment": 2,
+      "lineHeight": 1,
+      "font": {
+        "familyName": "Poppins",
+        "fullName": "Poppins-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    },
+    "headerEmphasis": {
+      "textScale": 1,
+      "textAlignment": 2,
+      "lineHeight": 1,
+      "font": {
+        "familyName": "Poppins",
+        "fullName": "Poppins-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    },
+    "text": {
+      "textScale": 1,
+      "textAlignment": 0,
+      "lineHeight": 1.1000000238418579,
+      "font": {
+        "familyName": "Didact Gothic",
+        "fullName": "DidactGothic-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    },
+    "background": {
+      "color": {
+        "red": 1,
+        "green": 1,
+        "blue": 1
+      }
+    },
+    "textStrong": {
+      "textScale": 1,
+      "textAlignment": 0,
+      "lineHeight": 1.1000000238418579,
+      "font": {
+        "familyName": "Didact Gothic",
+        "fullName": "DidactGothic-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    },
+    "header": {
+      "textScale": 1,
+      "textAlignment": 2,
+      "lineHeight": 1,
+      "font": {
+        "familyName": "Poppins",
+        "fullName": "Poppins-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    },
+    "textEmphasis": {
+      "textScale": 1,
+      "textAlignment": 0,
+      "lineHeight": 1.1000000238418579,
+      "font": {
+        "familyName": "Didact Gothic",
+        "fullName": "DidactGothic-Regular",
+        "memberName": "Regular"
+      },
+      "color": {
+        "red": 0.21568627450980393,
+        "green": 0.21568627450980393,
+        "blue": 0.21568627450980393
+      }
+    }
+  }
+}s

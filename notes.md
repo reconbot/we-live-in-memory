@@ -54,20 +54,21 @@ future directions
   "data": {
     "site": {
       "name": "BUSTLE",
+      "__typename": "Site",
       "post": {
         "id": "8031264",
         "__typename": "ArticlePost",
         "title": "I Wore 'Dad Shoes' For A Week & They Were SO Much Cooler Than I Thought They’d Be",
         "path": "/p/i-wore-dad-shoes-for-a-week-they-were-so-much-cooler-than-i-thought-theyd-be-8031264",
+        "body": "99% of the JSON you'd be looking at, HI JSCONF!",
         "publishedAt": 1521160559405,
         "updatedAt": 1524672008862,
-        "author": {
-          "id": "1910027", "name": "Dale Arden Chong" },
+        "author": { "id": "1910027", "__typename": "User", "name": "Dale Arden Chong" },
         "tagConnection": {
           "nodes": [
-            { "id": "1706155", "name": "homepage" },
-            { "id": "1706162", "name": "fashion" },
-            { "id": "2214803", "name": "Freelancer" }
+            { "id": "1706155", "__typename": "Tag", "name": "homepage" },
+            { "id": "1706162", "__typename": "Tag", "name": "fashion" },
+            { "id": "2214803", "__typename": "Tag", "name": "Freelancer" }
           ]
         }
       }
