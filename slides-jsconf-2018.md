@@ -37,6 +37,10 @@ autoscale: true
 
 ---
 
+# https://github.com/reconbot/we-live-in-memory
+
+---
+
 # API Response Time
 ![fit](img/api-speed.png)
 
@@ -200,6 +204,7 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 > Redis is an in-memory **data structure server**. It supports, **hashes**, lists, sets, **sorted sets** with range queries.
 -- Redis.io (kinda)
 
+^ people usually use this as a disposable cache, cache it here and throw it away (eg sessions)
 ---
 
 > Hey Francis,
@@ -229,6 +234,12 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 
 ---
 
+# This could be any database
+
+^ Speed is important to us, we have ads to load
+
+---
+
 ![](img/bdg-stack-linear-labeled.png)
 
 ^ describe everything, note that elasticsearch is used for searches and related content
@@ -236,6 +247,8 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 ---
 
 ![](img/bdg-stack-linear-circled.png)
+
+^ lets start with an example
 
 ---
 
@@ -257,20 +270,20 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
     "name": "BUSTLE",
     "__typename": "Site",
     "post": {
-      "id": "8031264",
-      "__typename": "ArticlePost",
+      "id": "3",
+      "__typename": "Post",
       "title": "I Wore 'Dad Shoes' For A Week & They Were SO Much Cooler Than I Thought",
-      "path": "/p/i-wore-dad-shoes-for-a-week-they-were-so-much-cooler-8031264",
+      "path": "/p/i-wore-dad-shoes-for-a-week-they-were-so-much-cooler-3",
       "body": "99% of the JSON you'd be looking at, HI JSCONF!",
       "author": {
-        "id": "1910027",
+        "id": "4",
         "__typename": "User",
         "name": "Dale Arden Chong"
       },
       "tags": [
-        { "id": "1706155", "__typename": "Tag", "name": "homepage" },
-        { "id": "1706162", "__typename": "Tag", "name": "fashion" },
-        { "id": "2214803", "__typename": "Tag", "name": "freelancer" }
+        { "id": "5", "__typename": "Tag", "name": "homepage" },
+        { "id": "6", "__typename": "Tag", "name": "fashion" },
+        { "id": "7", "__typename": "Tag", "name": "freelancer" }
       ]
     }
   }
@@ -281,10 +294,10 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 ---
 
 ```
-query postByPath($path: String!, $site: SiteName!) {
-  site(name: $site) {
+query postByPath {
+  site(name: BUSTLE) {
     name
-    postByPath(path: $path) {
+    post(path: "/p/i-wore-dad-shoes-for-a-week-they-were-so-much-cooler-3") {
       id
       __typename
       title
@@ -312,16 +325,16 @@ query postByPath($path: String!, $site: SiteName!) {
     "name": "BUSTLE",
     "__typename": "Site",
     "post": {
-      "id": "8031264",
-      "__typename": "ArticlePost",
+      "id": "3",
+      "__typename": "Post",
       "author": {
-        "id": "1910027",
+        "id": "4",
         "__typename": "User"
       },
       "tags": [
-        { "id": "1706155", "__typename": "Tag" },
-        { "id": "1706162", "__typename": "Tag" },
-        { "id": "2214803", "__typename": "Tag" }
+        { "id": "5", "__typename": "Tag" },
+        { "id": "6", "__typename": "Tag" },
+        { "id": "7", "__typename": "Tag" }
       ]
     }
   }
@@ -331,71 +344,98 @@ query postByPath($path: String!, $site: SiteName!) {
 
 ![](img/post-graph-graphql.png)
 
+---
+
+![](img/post-graph.png)
 
 ---
 
-```
-type Post {
-  title: String!
-  body: MobileDoc!
-}
+![fit](img/gradius.png)
 
-type Page {
-  path: String!
-  postConnection(sort: "publishedAt"): PostConnection!
-}
+# We built our own Graph Database
 
-```
+^ what if we had a database that let us save and access data like this?
+^ we called it gradius
 
 ---
 
-# Bustle *loves* to share and fund Open Source but we missed this one.
+> Oh you mean, like Neo4j right?
+-- 99% of you
 
 ---
 
-![fit](img/nemesis.jpg)
-
-^ The US arcade port of Gradius
+> Sure, but it's faster and doesn't do any of the same things.
+-- Francis
 
 ---
 
-# This works for bustle and your needs are your needs.png
+> Trains aren't slow they have one speed, people get on & off, the people are slow.
+> Databases aren't slow they have one speed, data goes in and out, the queries are slow.
+-- Ikai (a DBA, who I guess never took the subway)
+
+^ yes but also you can build a faster train
+
+---
+
+# It's all about tradeoffs
+
+---
+
+# Bustle Traded Query Flexibility for Speed
+
+^ and that's why we replicate from graphDB to BigQuery and elasticsearch
+
+---
+
+# Bustle *loves* to share & fund Open Source
 
 ---
 
 ![left fit](img/nemesis-box.jpg)
 
-# Install
-```
-npm i nemesis-db
-```
+![left inline](img/install-nemesis.png)
 
-# Features
-- Node and Edge Schemas, types and Interfaces
--
-- Schemaless Nodes
-- Weighted Edges
+- Fast Reads
+- Node and Edge Schemas with Types and Interfaces
+- Weighted and Labeled Edges with Scanning
 - Compression
+- Still porting, not done yet!
+
+^ The US arcade port of Gradius
 
 ---
 
-Now you can make a fast website!
+# Lets Make a GraphQL Server
+
+1. the tools
+2. the schema
+3. the resolvers
+4. the data
+
+---
+# Tools
+
+```json
+{
+  "dependencies": {
+    "apollo-server": "^2.0.5",
+    "apollo-server-lambda": "^2.0.4",
+    "graphql": "^0.13.2",
+    "nemesis-db": "^1.3.0-0"
+  }
+}
+```
 
 ---
 
-Thats cool, but why is it fast?
+![fit](img/nemesis.jpg)
 
----
-
-Thanks!
-
----
-
-We got some time, so lets make a fast website.
-
+#[fit] Nemesis isn't done yet, you can help
 
 ---
 
 # Procrastination is a wonderful motivator
 - 2 libraries, 4 typedefs, a short story, and about 16 open source prs made avoiding working on this talk
 - Oh and nemesis-db
+
+# https://github.com/reconbot/we-live-in-memory

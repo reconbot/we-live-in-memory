@@ -1,0 +1,37 @@
+type Query {
+  site(name: SITE_NAME!): Site!
+}
+
+enum SITE_NAME {
+  BUSTLE
+  ROMPER
+}
+
+type Site {
+  id: Int!
+  name: String!
+  post(path: String!): Post
+}
+
+type Post {
+  id: Int!
+  path: String!
+  title: String!
+  body: String!
+  author: User!
+  tags: [Tag!]!
+}
+
+type User {
+  id: Int!
+  name: String!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+}
+
+type Mutation {
+  resetDevData: String!
+}

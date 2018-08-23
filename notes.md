@@ -78,3 +78,33 @@ future directions
 ```
 
 ---
+
+
+
+#373737
+#cc0096
+
+---
+
+graphql resolvers
+
+we used to query by fields but it was super complex
+
+do the apollo tools setup
+
+What is graphql
+
+What is lambda
+
+We use lambda because we can ignore a specific bit of scaling, we've grown 25x without having to worry about it
+
+eg, push notific
+
+dropped our monthly spend from 30k a month to 3k a month
+
+we develop in an express server that runs our lambda function
+
+
+Why each level?
+
+we used to have a dozzen microservices
