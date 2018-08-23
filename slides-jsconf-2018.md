@@ -105,6 +105,18 @@ ___
 ^ CDN, react λ , graphql λ , Redis/ES
 
 ---
+
+# What is AWS Lambda (λ)?
+
+^ Is functions as a service, you get a remote api to call your function, in a consistent environment regardless of concurrency. 1 or 100k requests/s and they're guaranteed to have the same cpu and memory.
+
+---
+
+# Why are we using lambda?
+
+^ We lowered our monthly spend form 30k a month to 3k a month, and we can now handle unpredictable spikes in traffic that miss our CDN, we've grown 10x without having to worry about it
+
+---
 # Layers
 
 1. CDN
@@ -180,6 +192,7 @@ Take an HTTP request, fetch data, and render out { status, body, headers }
 
 ![left inline original 100%](img/graphql-full.png)
 
+^ we used to have a dozen microservices, each slightly different. We now have 1 way to do everything
 
 ---
 
@@ -442,6 +455,8 @@ server.listen().then(({ url }) => {
 });
 ```
 
+^ good for developing in
+
 ---
 # apollo-server-lambda
 
@@ -455,6 +470,8 @@ const server = new ApolloServer({ typeDefs, resolvers })
 
 exports.handler = server.createHandler() // 🚀 ☄️
 ```
+
+^ good for production
 
 ---
 # GraphiQL
@@ -600,11 +617,10 @@ module.exports = {
 }
 ```
 ---
-# The Data
 
-- The ugly code to make test data has been removed
-- its on github
-- It's going to look like any file you ever made to make test data
+# The N+1 problem
+
+^ we solve this with command batching and redis pipelining
 
 ---
 
@@ -624,10 +640,18 @@ module.exports = {
 #[fit] Nemesis isn't done yet, you can help
 
 ---
+# Open source
+
+- [`bluestream`](https://github.com/bustle/bluestream) Streams for Async functions
+- [`mobiledoc-kit`](https://github.com/bustle/mobiledoc-kit) A toolkit for building WYSIWYG editors with Mobiledoc
+- [`nemesis-db`](https://github.com/bustle/nemesis-db) A fast redis graph database
+- [`redis-loader`](https://github.com/bustle/redis-loader) An ioredis-like object that batches commands via dataloader
+- [`sammie`](https://github.com/bustle/sammie#readme) Serverless Application Model Made Infinitely Easier
+- [`streaming-iterables`](https://github.com/reconbot/streaming-iterables) Replace your streams with async iterators
+
+---
 
 # Thank you 🙏
 
-- https://github.com/reconbot/we-live-in-memory
-- https://github.com/bustle/nemesis-db
-- https://bustle.company/
-
+- `https://github.com/reconbot/we-live-in-memory` slides and a short story
+- `https://bustle.company/` a great place to work
