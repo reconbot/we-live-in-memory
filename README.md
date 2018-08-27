@@ -20,5 +20,4 @@
 - [`streaming-iterables`](https://github.com/reconbot/streaming-iterables) Replace your streams with async iterators
 
 # Thank you
-- For a great place to work
-`https://bustle.company`
+- For a great place to work [`https://bustle.company`](https://bustle.company)
