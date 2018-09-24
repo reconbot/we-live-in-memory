@@ -162,9 +162,9 @@ interface UpdateCarouselZonePayload {
 
 ```typescript
 export async function updateCarouselZone(
-  input: UpdateCarouselZoneInput,
+  input: GraphQL.UpdateCarouselZoneInput,
   { skipAsyncEvents } = { skipAsyncEvents?: bool }
-): Promise<UpdateCarouselZonePayload> {
+): Promise<GraphQL.UpdateCarouselZonePayload> {
   const { id } = input // knows id is guaranteed and a GUID
   const zone: any = await graph.CarouselZone.FIND(id, BadRequestError)
   const updatedZone: any = await graph.CarouselZone.update(input)
