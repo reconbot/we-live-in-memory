@@ -14,8 +14,9 @@ footer: ![10%](img/bdg.png)
 
 - 🍞 GraphQL Objects
 - 🥩 Resolvers
-- 🍞 GraphDB Objects
+- 🥖 GraphDB Objects
 
+^ weird having two kinds of bread
 ---
 
 # Gradius is more like a Monte Cristo
