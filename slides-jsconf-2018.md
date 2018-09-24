@@ -1,4 +1,4 @@
-theme: ED Fonts JS-Conf
+theme: Francis Bustle Deckset
 autoscale: true
 
 # I 👋 Francis
