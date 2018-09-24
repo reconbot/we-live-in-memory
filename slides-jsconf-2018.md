@@ -134,7 +134,7 @@ Takes an HTTP request and try to give a response out of cache, try really hard.
 
 ---
 
-# The CDN
+# The *CDN*
 # Should Execute my Functions
 
 ---
